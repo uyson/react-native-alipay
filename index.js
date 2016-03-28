@@ -21,19 +21,19 @@ function translateError(err, result) {
 
 // Save callback and wait for future event.
 let savedCallback = undefined;
-function waitForResponse(type) {
+function waitForPayResponse(type) {
   return new Promise((resolve, reject) => {
     if (savedCallback) {
       savedCallback('User canceled.');
     }
     savedCallback = result => {
-      if (result.type !== type) {
-        //
-        //if (__DEV__) {
-        //  throw new Error('Unsupported response type: ' + resp.type);
-        //}
-        return;
-      }
+    //   if (result.type !== type) {
+    //     //
+    //     //if (__DEV__) {
+    //     //  throw new Error('Unsupported response type: ' + resp.type);
+    //     //}
+    //     return;
+    //   }
       savedCallback = undefined;
       if (result.resultStatus !== '9000') {
         // const err = new Error(result.errMsg);
@@ -78,7 +78,7 @@ function wrapApi(nativeFunc) {
 }
 const nativePayRequest = wrapApi(Alipay.payOrder);
 
-export function payOrder(data) {
-  return nativePayRequest(data)
-      .then(() => waitForResponse("Pay.Resp"));
+export function payOrder(orderStr, scheme) {
+  return nativePayRequest(orderStr, scheme)
+      .then(() => waitForPayResponse("Pay.Resp"));
 }
